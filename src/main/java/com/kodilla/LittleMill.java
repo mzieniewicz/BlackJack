@@ -58,18 +58,20 @@ public class LittleMill extends Application {
     }
 
     public boolean isWinner(int numberPlayer) {
-
+        System.out.println("Checking if somebody win."+numberPlayer);
         for (int i = 0; i < 3; i++) {
             if (cell[i][0].getNumberPlayer() == numberPlayer
                     && cell[i][1].getNumberPlayer() == numberPlayer
-                    && cell[i][2].getNumberPlayer() == numberPlayer)
-                return true;
+                    && cell[i][2].getNumberPlayer() == numberPlayer){
+                System.out.println(numberPlayer+ "WINN!");
+                return true;}
         }
         for (int j = 0; j < 3; j++) {
             if (cell[0][j].getNumberPlayer() == numberPlayer
                     && cell[1][j].getNumberPlayer() == numberPlayer
-                    && cell[2][j].getNumberPlayer() == numberPlayer)
-                return true;
+                    && cell[2][j].getNumberPlayer() == numberPlayer){
+                System.out.println(numberPlayer+ "WINN!");
+                return true;}
         }
 
         return false;
@@ -86,21 +88,26 @@ public class LittleMill extends Application {
             this.setOnMouseClicked(e -> {
                 if (!isFull()) {
                     System.out.println("Clicked");
-                    handleMouseClick();
+                    if(handleMouseClick()){
+                        return;
+                    }
+
                     if (cellSum() == 1 || cellSum() == 4 || cellSum() == 7 || cellSum() == 10) {
-                        computerMoves();
+                        if(computerMoves()){
+                            return;
+                        }
                     }
                     System.out.println("The cell sum = " + cellSum());
                     resultLbl.setText("Your turn");
-                } else {
-                    if (numberPlayer == 0) {
-                        resultLbl.setText(" Nobody won ! The game is over!");
-                    } else if (numberPlayer == 1) {
-                        resultLbl.setText("You won! The game is over!");
-                    } else if (numberPlayer == 2) {
-                        resultLbl.setText("The computer won! The game is over!");
-                    }
-                }
+//                } else {
+//                    if (numberPlayer == 0) {
+//                        resultLbl.setText(" Nobody won ! The game is over!");
+//                    } else if (numberPlayer == 1) {
+//                        resultLbl.setText("You won! The game is over!");
+//                    } else if (numberPlayer == 2) {
+//                        resultLbl.setText("The computer won! The game is over!");
+//                    }
+              }
             });
         }
 
@@ -122,7 +129,7 @@ public class LittleMill extends Application {
         }
 
 
-        public void computerMoves() {
+        public boolean computerMoves() {
             boolean isEmpty = true;
 
             while (isEmpty) {
@@ -136,25 +143,29 @@ public class LittleMill extends Application {
                     System.out.println("The black pawn placed!");
                     isEmpty = false;
                 }
-
             }
+
+            if (isWinner(2)) {
+                resultLbl.setText("The computer won! The game is over!");
+                return true;
+            }
+            return false;
         }
 
-        public void handleMouseClick() {
-            // if (isWinner(1) {
-            //     resultLbl.setText("You won! The game is over!");
-            // }
-            //    else if (isWinner(2) {
-            //     resultLbl.setText("The computer won! The game is over!");
-            //  }else{
+        public boolean handleMouseClick() {
+
             if (getNumberPlayer() == 0) {
                 setNumberPlayer(1);
-                //   cell[computerMovesX()][computerMovesY()].setNumberPlayer(2);
+                if (isWinner(1)) {
+                    resultLbl.setText("You won! The game is over!");
+                    return true;
+                }
 
             } else {
                 System.out.println("This cell is taken!");
             }
-            //}
+            return false;
+
         }
 
 
