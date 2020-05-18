@@ -1,5 +1,6 @@
 package com.kodilla;
 
+import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 
 public class Pawn {
@@ -9,13 +10,17 @@ public class Pawn {
     public Pawn(boolean ifPlayer) {
         this.ifPlayer = ifPlayer;
     }
-public void getImage(){
+
+    public Node getImage(){
+        ImageView img = new ImageView();
         if(ifPlayer){
-            ImageView img = new ImageView("file:src/main/resources/white pawn.png");
+
+             img = new ImageView("file:src/main/resources/white pawn.png");
         }
         else{
-            ImageView img = new ImageView("file:src/main/resources/black pawn.png");
+             img = new ImageView("file:src/main/resources/black pawn.png");
         }
+        return img;
 }
     public boolean isIfPlayer() {
         return ifPlayer;
