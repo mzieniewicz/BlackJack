@@ -15,15 +15,18 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-import java.util.Random;
 
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 
 public class LittleMill extends Application {
 
     private Image imageBoard = new Image("file:src/main/resources/little+mill2.png");
 
- //   private boolean playerTurn;
+    //   private boolean playerTurn;
 
     private Label playerLbl = new Label("Your pawns: 4");
     private Label resultLbl = new Label("       The game continues");
@@ -32,6 +35,34 @@ public class LittleMill extends Application {
             "\nThe winner is \nthe one who \nsets three pawn \nin a line \nhorizontally or \nvertically.");
 
     private Cell[][] cell = new Cell[3][3];
+
+//    File savedHashMaps = new File("file:src/main/ranking.list");
+//    Map<Long, Long> map = new HashMap<>();
+//
+//    public void saveMap() {
+//        try {
+//            ObjectOutputStream oos = new ObjectOutputStream (new FileOutputStream(savedHashMaps));
+//            oos.writeObject(map);
+//            oos.close();
+//        } catch (Exception e) {
+//            // obsługa błędów
+//            System.out.println("The game is not saved.");
+//        }
+//    }
+//
+//    public void loadMap() {
+//        try {
+//            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(savedHashMaps));
+//            Object readMap = ois.readObject();
+//            if(readMap instanceof HashMap) {
+//                map.putAll((HashMap) readMap);
+//            }
+//            ois.close();
+//        } catch (Exception e) {
+//            // obsługa błędów
+//            System.out.println("The game results are not shown.");
+//        }
+//    }
 
 
     public int cellSum() {
@@ -46,11 +77,27 @@ public class LittleMill extends Application {
 
     public boolean isFull() {
         if (cellSum() == 12) {
-          //  playerLbl.setText("Your pawns: 0");
+
             return true;
 
         }
         return false;
+    }
+
+    public void textResultLbl() {
+
+        if (cellSum() == 1 || cellSum() == 3) {
+            playerLbl.setText("Your pawns: 3");
+        }
+        if (cellSum() == 4 || cellSum() == 6) {
+            playerLbl.setText("Your pawns: 2");
+        }
+        if (cellSum() == 7 || cellSum() == 9) {
+            playerLbl.setText("Your pawns: 1");
+        }
+        if (cellSum() == 10 || cellSum() == 12) {
+            playerLbl.setText("Your pawns: 0");
+        }
     }
 
     public boolean isWinner(int numberPlayer) {
@@ -81,7 +128,7 @@ public class LittleMill extends Application {
         private int numberPlayer = 0;
 
         public Cell() {
-      //      setStyle("-fx-border-color: rgba(114,226,10,0.91)");
+       //   setStyle("-fx-border-color: rgba(84,220,26,0.91)");
             this.setPrefSize(70, 70);
             this.setOnMouseClicked(e -> {
 
@@ -99,17 +146,7 @@ public class LittleMill extends Application {
                     System.out.println("The cell sum = " + cellSum());
                     resultLbl.setText("     Your turn");
 
-                    if (cellSum() == 1 || cellSum() == 3) {
-                        playerLbl.setText("Your pawns: 3");
-                    }
-                    if (cellSum() == 4 || cellSum() == 6) {
-                        playerLbl.setText("Your pawns: 2");
-                    }
-                    if (cellSum() == 7 || cellSum() == 9) {
-                        playerLbl.setText("Your pawns: 1");
-                    }
-
-                    if(isWinner(1)){
+                    if (isWinner(1)) {
                         resultLbl.setText(" You won! The game is over!");
                     }
 
@@ -132,7 +169,7 @@ public class LittleMill extends Application {
                 pawn = new Pawn(false);
                 getChildren().add(pawn.getImage());
 
-            }else if(numberPlayer == 0){
+            } else if (numberPlayer == 0) {
 
                 getChildren().removeAll();
             }
@@ -168,25 +205,21 @@ public class LittleMill extends Application {
         public boolean handleMouseClick() {
 
             if (isWinner(1)) {
-
                 return true;
 
-            }else{
-
-            if (getNumberPlayer() == 0) {
-                setNumberPlayer(1);
-                if (cellSum() == 10 || cellSum() == 12) {
-                    playerLbl.setText("Your pawns: 0");
-                }
-
             } else {
-                System.out.println("This cell is taken!");
-            }
-            return false;
-            }
 
+                if (getNumberPlayer() == 0) {
+                    setNumberPlayer(1);
+
+                    textResultLbl();
+
+                } else {
+                    System.out.println("This cell is taken!");
+                }
+                return false;
+            }
         }
-
 
     }
 
@@ -197,11 +230,11 @@ public class LittleMill extends Application {
         BackgroundImage backgroundImage = new BackgroundImage(imageBoard, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
         Background background = new Background(backgroundImage);
 
-        playerLbl.setFont(new Font("Arial", 24));
-        playerLbl.setTextFill(Color.web("#98f"));
+        playerLbl.setFont(new Font("Arial", 30));
+        playerLbl.setTextFill(Color.web("#81f"));
 
         resultLbl.setFont(new Font("Arial", 30));
-        resultLbl.setTextFill(Color.web("#98f"));
+        resultLbl.setTextFill(Color.web("e21"));
 
         gameRules.setFont(new Font("Arial", 16));
         gameRules.setTextFill(Color.web("#111"));
@@ -224,11 +257,11 @@ public class LittleMill extends Application {
         newbtn.setFont(new Font("Arial", 16));
         newbtn.setOnAction((e) -> {
 
-            System.out.println( "Restarting app - New game!" );
+            System.out.println("Restarting app - New game!");
             primaryStage.close();
-            Platform.runLater( () -> {
+            Platform.runLater(() -> {
                 try {
-                    new LittleMill().start( new Stage() );
+                    new LittleMill().start(new Stage());
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }
@@ -243,7 +276,7 @@ public class LittleMill extends Application {
         endbtn.setFont(new Font("Arial", 20));
         endbtn.setOnAction((e) -> {
             System.out.println("End of the game - exit");
-           Platform.exit();
+            Platform.exit();
         });
 
         grid.add(endbtn, 4, 0, 1, 1);
@@ -260,6 +293,10 @@ public class LittleMill extends Application {
         primaryStage.setTitle("Little Mill");
         primaryStage.setScene(scene);
         primaryStage.show();
+        //     while(true){
+//
+//        }
+//
     }
 
     public static void main(String[] args) {
