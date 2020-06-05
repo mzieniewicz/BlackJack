@@ -15,23 +15,23 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+
 import java.util.Random;
 
 
 public class LittleMill extends Application {
 
     private final Image imageBoard = new Image("file:src/main/resources/little+mill2.png");
-
-    //   private boolean playerTurn;
-
     private final Label playerLbl = new Label("Your pawns: 4");
     private final Label resultLbl = new Label("       The game continues");
     private final Label gameRules = new Label("There are two \nplayers who\n have 4 pawn\n each \n(black and \nwhite).\n" +
             "\nThe players \narrange \ntheir pawn on \nthe board \nspaces \nin turns (black \ncircles),\n the player\n with white pawn \nbegins (YOU!).\n" +
             "\nThe winner is \nthe one who \nsets three pawn \nin a line \nhorizontally or \nvertically.");
 
-    private final Cell[][] cell = new Cell[3][3];
+    private static final int WIDTH_BOARD = 3;
+    private static final int HEIGHT_BOARD = 3;
 
+    private final Cell[][] cell = new Cell[WIDTH_BOARD][HEIGHT_BOARD];
 
     private long getNumberOfEmptyCells(GridPane gridPane) {
         return gridPane.getChildren().stream()
@@ -39,9 +39,7 @@ public class LittleMill extends Application {
                 .map(node -> (Cell) node)
                 .filter(cell -> cell.getNumberPlayer() == 0)
                 .count();
-        //.filter(cell->cell.isEmpty);
     }
-
 
     public void randomComputerMoves() {
         boolean isEmpty = true;
@@ -64,7 +62,6 @@ public class LittleMill extends Application {
         }
     }
 
-
     public boolean isWinner(int numberPlayer) {
         System.out.println("Checking if somebody win." + numberPlayer);
         for (int i = 0; i < 3; i++) {
@@ -83,10 +80,8 @@ public class LittleMill extends Application {
                 return true;
             }
         }
-
         return false;
     }
-
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -145,13 +140,14 @@ public class LittleMill extends Application {
 
         grid.add(endbtn, 4, 0, 1, 1);
 
+        final int[] numberOfWhitePawn = {3};
 
         for (int i = 0; i < 3; i++) {
 
             for (int j = 0; j < 3; j++) {
                 Cell emptyCell = new Cell();
                 grid.add(cell[i][j] = emptyCell, i + 1, j + 1);
-                final int[] numberOfWhitePawn = {3};
+
                 emptyCell.setOnMouseClicked(e -> {
 
                     if (getNumberOfEmptyCells(grid) > 1) {
@@ -164,24 +160,23 @@ public class LittleMill extends Application {
                                 emptyCell.handleMouseClick();
                                 playerLbl.setText("Your pawns: " + numberOfWhitePawn[0]);
                                 numberOfWhitePawn[0]--;
+                            }
 
+                            if (getNumberOfEmptyCells(grid) % 2 == 0) {
+                                randomComputerMoves();
+                                System.out.println("Number of empty cells: " + getNumberOfEmptyCells(grid));
 
-                                if (getNumberOfEmptyCells(grid) % 2 == 0) {
-                                    randomComputerMoves();
-                                    System.out.println("Number of empty cells: " + getNumberOfEmptyCells(grid));
+                                if (isWinner(2)) {
+                                    resultLbl.setText(" The computer won! The game is over!");
+
+                                } else if (getNumberOfEmptyCells(grid) == 1) {
+                                    resultLbl.setText(" Nobody won ! The game is over!");
                                 }
-                            } else {
-                                resultLbl.setText(" The computer won! The game is over!");
                             }
                         }
-
-                    } else {
-                        resultLbl.setText(" Nobody won ! The game is over!");
                     }
-
                 });
             }
-
         }
         Scene scene = new Scene(grid, 860, 690);
 
@@ -189,25 +184,7 @@ public class LittleMill extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-
-//
-//        if (isWinner(1)) {
-//            resultLbl.setText(" You won! The game is over!");
-//        }
-//
-//        if (isWinner(1)) {
-//
-//        }
-//        if (isWinner(2)) {
-//            resultLbl.setText(" The computer won! The game is over!");
-//
-//        }
-//                    else if (getNumberOfEmptyCells(grid)>1) {
-//                        resultLbl.setText(" Nobody won ! The game is over!");
-//
-//                    }
     }
-
 
     public static void main(String[] args) {
         launch(args);

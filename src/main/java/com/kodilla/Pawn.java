@@ -5,7 +5,7 @@ import javafx.scene.image.ImageView;
 
 public class Pawn {
 
-    private boolean ifPlayer;
+    private final boolean ifPlayer;
 
     public Pawn(boolean ifPlayer) {
         this.ifPlayer = ifPlayer;
@@ -21,11 +21,5 @@ public class Pawn {
         return img;
     }
 
-    public boolean isIfPlayer() {
-        return ifPlayer;
-    }
 
-    public void setIfPlayer(boolean ifPlayer) {
-        this.ifPlayer = ifPlayer;
-    }
 }
